@@ -11,7 +11,7 @@ for fullfile in "./Test/*.in"; do
 		# echo -e 'input: \t' $input
 		# echo -e 'output: ' $output
 
-		echo 'python myShogi.py -f ./Test/' $input
+		echo 'python ./src/myShogi.py -f ../Test/' $input
 		# python 'myShogi.py' -f './Test/'$input > output.out | diff -u './Test/'$output - 
     done
 done
