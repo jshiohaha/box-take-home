@@ -25,7 +25,7 @@ class GameBoard(object):
 
     def __init__(self, defaultConfiguation=True, listOfPiecesAndLocations=None):
         ''' Initializes the game board based on the initial configuration
-        
+
             The listOfPiecesAndLocations is a list that contains tuples representing a piece
             and a board location. Example: [(p, a4), (S, b3)]
         '''
@@ -53,7 +53,7 @@ class GameBoard(object):
 
                     board[row][col] = piece
                 else:
-                    # todo: make sure this is the correct way to print this...
+                    # TODO: Should this be here? + Make sure this is the correct way to print this.
                     print("Piece " + str(piece) + " not inserted because of invalid "
                         " board location: (" + str(col) + ", " + str(row) + ")")
                     
@@ -61,7 +61,6 @@ class GameBoard(object):
             if not defaultConfiguation and not listOfPiecesAndLocations:
                 print("Invalid board configuation... initializing game with default board configuation.")
 
-            # insert lower pieces at default locations
             board[0][4] = 'k'
             board[1][4] = 'g'
             board[2][4] = 's'
@@ -69,7 +68,6 @@ class GameBoard(object):
             board[4][4] = 'r'
             board[0][3] = 'p'
 
-            # insert UPPER pieces at default locations
             board[0][0] = 'K'
             board[1][0] = 'G'
             board[2][0] = 'S'
