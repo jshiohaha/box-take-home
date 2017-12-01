@@ -99,3 +99,9 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# Files specific to local environment and testing purposes 
+.DS_Store
+*Test/
+*output.out
+*Public/
