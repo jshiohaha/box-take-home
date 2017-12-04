@@ -218,13 +218,9 @@ def generate_moves_by_piece(piece_name, origin, player, board, skip):
         potential_moves = set(potential_moves)
         potential_moves = ["".join([game_board.map_num_to_char[i[1]], str(i[0])]) for i in potential_moves]
         potential_moves = sorted(potential_moves, key=lambda x: (x[0], x[1]))
-
     except:
         print("Failed to convert potential_moves... ")
         sys.exit()
-
-    # print(piece_name)
-    # print(potential_moves)
     return potential_moves
 
 
@@ -312,18 +308,12 @@ def generate_bishop_moves(piece_name, origin_col, origin_row, current_player, bo
     potential_moves = set()
     col, row = origin_col+1, origin_row+1
 
-    # print("(" + str(col) + "," + str(row) + ")")
-
     # lowerLeft
     offset = 1
     # print("lower left")
     while 1 <= col-offset  and 1 <= row-offset:
-        # print("(" + str(row-offset) + "," + str(col-offset) + ")")
-        # print(board[row-offset-1][col-offset-1])
-        
         if not piece_owned_by_player(current_player, board[row-offset-1][col-offset-1]):
             potential_moves.add((col-offset, row-offset))
-        
             if not skip and board[row-offset-1][col-offset-1] != '':
                 break
         else:
@@ -335,9 +325,6 @@ def generate_bishop_moves(piece_name, origin_col, origin_row, current_player, bo
     offset = 1
     # print("lower right")
     while 1 <= col-offset  and game_board.NUM_COLS >= row+offset:
-        # print("(" + str(row+offset) + "," + str(col-offset) + ")")
-        # print(board[row+offset-1][col-offset-1])
-
         if not piece_owned_by_player(current_player, board[row+offset-1][col-offset-1]):
         
 
@@ -354,17 +341,11 @@ def generate_bishop_moves(piece_name, origin_col, origin_row, current_player, bo
     offset = 1
     # print("upper left")
     while game_board.NUM_COLS >= col+offset  and 1 <= row-offset: 
-        # print("(" + str(row-offset) + "," + str(col+offset) + ")")
-        # print(board[row-offset-1][col+offset-1])
-
         if not piece_owned_by_player(current_player, board[row-offset-1][col+offset-1]):
-        
-
             potential_moves.add((col+offset, row-offset))
 
             if not skip and board[row-offset-1][col+offset-1] != '':
                 break
-
         else:
             break
 
@@ -374,9 +355,6 @@ def generate_bishop_moves(piece_name, origin_col, origin_row, current_player, bo
     offset = 1
     # print("upper right")
     while game_board.NUM_COLS >= col+offset  and game_board.NUM_ROWS >= row+offset: 
-        # print("(" + str(row+offset) + "," + str(col+offset) + ")")
-        # print(board[row+offset-1][col+offset-1])
-
         if not piece_owned_by_player(current_player, board[row+offset-1][col+offset-1]):
             potential_moves.add((col+offset, row+offset))
 
@@ -417,34 +395,31 @@ def generate_gold_general_moves(piece_name, origin_col, origin_row, current_play
             else:
                 potential_moves.add((i,j))
 
-    # print("void moves")
-    # print(void_spots)
-    # print(["".join([game_board.map_num_to_char[i[1]], str(i[0])]) for i in void_spots])
-    # print(current_player.name)
-    # print("Moves after generating moves for gold general... " + str(["".join([game_board.map_num_to_char[i[1]], str(i[0])]) for i in potential_moves]))
-    # sys.exit()
     return potential_moves
 
 
 def generate_silver_general_moves(piece_name, origin_col, origin_row, current_player, board, skip):
     potential_moves = set()
     void_spots = [(origin_col+1, origin_row+1)]
-    
+
     col_lower_bound, col_upper_bound = max(1, origin_col), min(game_board.NUM_COLS, origin_col+2)
     row_lower_bound, row_upper_bound = max(1, origin_row), min(game_board.NUM_ROWS, origin_row+2)
 
     if player.map_player_name_to_enum[current_player.name] is LOWER:
+        # print("lower")
         void_spots += [(origin_col+1, origin_row+2), 
                        (origin_col+1, origin_row),
                        (origin_col, origin_row+1)]
     else:
-        void_spots += [(origin_col, origin_row), 
-                       (origin_col, origin_row),
-                       (origin_col, origin_row)]
+        # print("upper")
+        void_spots += [(origin_col+1, origin_row), 
+                       (origin_col+1, origin_row+2),
+                       (origin_col+2, origin_row+1)]
 
     for i in range(col_lower_bound, col_upper_bound+1):
+        # print("i: " + str(i))
         for j in range(row_lower_bound, row_upper_bound+1):
-            
+            # print("j: " + str(j))
             if (i,j) in void_spots:
                 continue
             else:
@@ -475,7 +450,7 @@ map_piece_to_moves = {
     "+b": [generate_king_moves, generate_bishop_moves],
     "g": [generate_gold_general_moves],
     "s": [generate_silver_general_moves],
-    "+s": [generate_gold_general_moves, generate_silver_general_moves],
+    "+s": [generate_gold_general_moves],
     "p": [generate_pawn_moves],
     "+p": [generate_gold_general_moves],
 }
