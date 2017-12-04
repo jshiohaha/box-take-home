@@ -1,4 +1,6 @@
 #!/bin/bash
+count=0
+increment=1
 for fullfile in "./Test/*.in"; do
     for file in $fullfile; do
     	filename=$(basename "$file")
@@ -7,11 +9,9 @@ for fullfile in "./Test/*.in"; do
 
 		input="$filename.in"
 		output="$filename.out"
+		count=$(($count+$increment))
 
-		# echo -e 'input: \t' $input
-		# echo -e 'output: ' $output
-
-		echo 'python ./src/myShogi.py -f ../Test/' $input
-		# python 'myShogi.py' -f './Test/'$input > output.out | diff -u './Test/'$output - 
+		echo -e 'Running test '$count'... \t' $input
+		python './src/myShogi.py' -f './Test/'$input | diff -u './Test/'$output -
     done
 done
