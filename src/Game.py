@@ -26,6 +26,7 @@ class Game(object):
             except:
                 print("There was an error parsing the input file: " + str(filename) + ". Exiting...")
                 sys.exit()
+
             initialPieces = contents['initialPieces']
             self.moves = contents['moves']
             self.lower_player = player.Player('lower', contents['lowerCaptures'])
@@ -41,9 +42,9 @@ class Game(object):
 
         self.lower_player.set_pieces(self.game_board.lower_pieces)
         self.upper_player.set_pieces(self.game_board.upper_pieces)
+        self.game_board.clear_player_pieces()
         self.game_board = self.game_board.board
         self.current_player = self.lower_player
-
 
     def increment_num_moves(self):
         self.num_moves += 1
@@ -221,7 +222,7 @@ class Game(object):
 
             opposing_player_moves = []
             if piece_name.lower() == 'k':
-                opposing_player = self.upper_player if self.current_player is self.lower_player else self.lower_player
+                opposing_player = self.get_opposing_player()
                 opposing_player_moves = self.get_possible_piece_moves(opposing_player, board)
             if board_destination in opposing_player_moves:
                 if self.debug_mode:
@@ -234,12 +235,7 @@ class Game(object):
                             temp_piece_name = piece_name
                             piece_name = piece_util.promote_piece(piece_name)
 
-                            if self.current_player is self.lower_player:
-                                self.lower_player.remove_from_pieces(temp_piece_name)
-                                self.lower_player.update_pieces(temp_piece_name, board_destination)
-                            else:
-                                self.upper_player.remove_from_pieces(temp_piece_name)
-                                self.upper_player.update_pieces(temp_piece_name, board_destination)
+                            self.update_player_piece(self.current_player, temp_piece_name, board_destination)
                         else:
                             if self.debug_mode:
                                 print(self.current_player.name + " tried to illegally promote " + str(piece_name) + ".")
@@ -256,31 +252,14 @@ class Game(object):
                             captured_piece = destination_piece if len(destination_piece) == 1 else destination_piece[1:]
                             
                             if captured_piece is not '':
-                                if self.current_player is self.lower_player:
-                                    captured_piece = captured_piece.lower()
-                                    self.upper_player.remove_from_pieces(destination_piece)
-                                    self.lower_player.add_to_captures(captured_piece)
-                                else:
-                                    captured_piece = captured_piece.upper()
-                                    self.lower_player.remove_from_pieces(destination_piece)
-                                    self.upper_player.add_to_captures(captured_piece)
+                                self.update_player_captures(self.current_player, captured_piece, destination_piece)
                         else:
                             if self.debug_mode:
                                 print("Move (" + str(move) + ") attempted by " + self.current_player.name + ", but they already own " + str(destination_piece))
                             return board, False
-
-                    opposing_player = self.upper_player if self.current_player is self.upper_player else self.lower_player
-                    opposing_player_moves = []
+                    opposing_player = self.get_opposing_player()
                     board = piece_util.make_move(board, piece_name, board_origin, board_destination)
-
-                    if self.current_player is self.lower_player:
-                        self.lower_player.update_pieces(piece_name, board_destination)
-                        if self.debug_mode:
-                            print(str(piece_name) + " updated in lower_pieces at " + board_destination)
-                    else:
-                        self.upper_player.update_pieces(piece_name, board_destination)
-                        if self.debug_mode:
-                            print(str(piece_name) + " updated in upper_pieces at " + board_destination)
+                    self.update_player_piece(self.current_player, piece_name, board_destination)
                 else:
                     if self.debug_mode:
                         print("Destination (" + str(board_destination) + ") not in potential moves: " + str(potential_moves))
@@ -290,6 +269,28 @@ class Game(object):
                 print(self.current_player.name + " cannot move " + str(piece_name))
             return board, False
         return board, True
+
+
+    def update_player_piece(self, current_player, piece_name, location):
+        if current_player is self.lower_player:
+            self.lower_player.update_pieces(piece_name, location)
+            if self.debug_mode:
+                print(str(piece_name) + " updated in lower_pieces at " + location)
+        else:
+            self.upper_player.update_pieces(piece_name, location)
+            if self.debug_mode:
+                print(str(piece_name) + " updated in upper_pieces at " + location)
+
+
+    def update_player_captures(self, current_player, captured_piece, destination_piece):
+        if current_player is self.lower_player:
+            captured_piece = captured_piece.lower()
+            self.upper_player.remove_from_pieces(destination_piece)
+            self.lower_player.add_to_captures(captured_piece)
+        else:
+            captured_piece = captured_piece.upper()
+            self.lower_player.remove_from_pieces(destination_piece)
+            self.upper_player.add_to_captures(captured_piece)
 
 
     def parse_move_input(self, action):

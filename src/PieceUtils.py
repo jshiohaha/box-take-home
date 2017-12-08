@@ -16,16 +16,9 @@ def piece_owned_by_player(current_player, piece_name):
     if piece_name == '':
         return False
 
-    piece_name_value = ord(piece_name) if len(piece_name) == 1 else ord(piece_name[1:])
-
-    if player.map_player_name_to_enum[current_player.name] is player.UPPER:
-        if piece_name_value > 64 and piece_name_value < 91:
-            return True
-        return False
-    else:
-        if piece_name_value > 96 and piece_name_value < 123:
-            return True
-        return False
+    if piece_name in current_player.get_pieces().keys():
+        return True
+    return False
 
 
 def get_piece_at_location(board, location):
@@ -153,6 +146,7 @@ def can_drop_pawn(board, piece_name, current_player, drop_location):
         return False
 
     return True
+
 
 def drop_piece(board, current_player, piece_name, drop_location):
     if player.map_player_name_to_enum[current_player.name] is player.UPPER:
@@ -476,10 +470,12 @@ def generate_rook_attack(origin_col, origin_row, king_col, king_row, player, boa
                 idx += 1
     return attack_moves
 
+
 def generate_bishop_attack(origin_col, origin_row, king_col, king_row, player, board):
     # TODO: implement immediate attack locations for bishop
     attack_moves = set()
     return attack_moves
+
 
 map_dangerous_pieces_to_moves = {
     "r": generate_rook_attack,

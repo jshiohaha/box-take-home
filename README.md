@@ -31,3 +31,11 @@ Alternatively, `RunTestsWithDiff.sh` is bash script that will automatically run 
 
 ## Design
 You can find specific design in the [src](src/) directory.
+
+## Performance
+There are a few computationally expensive functions, mainly involved with generating moves to escape check and checking whether or not a player is in checkmate. However, this fact does not necessarily affect the execution of the program too much because of the limited input size of variables and conditions of the game. For example, there are a max of **12 pieces** in the game, the board is a max size of `5x5`, and there can only be **400 moves** before the game ends in a tie. So, despite some expensive functions, the execution of the game isn't slowed down by too much.
+
+## Error Handling
+For most general errors that could occur such as an input file not existing, an error message will be printed to the screen but the execution of the game will end immediately instead of allowing unhandled exceptions to be printed in the console.
+
+Errors such as an action other than `move` or `drop` or an invalid board position will result in the game ending as a result of an `INVALID MOVE`.

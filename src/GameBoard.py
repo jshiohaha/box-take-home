@@ -66,7 +66,6 @@ class GameBoard(object):
 
                     board[row][col] = piece_name
                 else:
-                    # TODO: Should this be here? + Make sure this is the correct way to print this.
                     print("Piece " + str(piece_name) + " not inserted because of invalid "
                         " board location: (" + str(col) + ", " + str(row) + ")")
                     
@@ -95,3 +94,7 @@ class GameBoard(object):
         self.set_upper_pieces(upper_pieces)
 
         return board
+
+    def clear_player_pieces(self):
+        self.lower_pieces = None
+        self.upper_pieces = None
