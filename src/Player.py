@@ -37,12 +37,14 @@ class Player():
     def update_pieces(self, piece_name, location):
         self.pieces[piece_name] = location
 
-    def get_piece_location(self, piece_name):
-        return self.pieces[piece_name]
-
-    def get_escape_moves(self):
-        return self.escape_moves
-
     def remove_from_pieces(self, piece_name):
         self.pieces.pop(piece_name, None)
 
+    def get_piece_location(self, piece_name):
+        return self.pieces[piece_name]
+
+    def add_to_captures(self, piece_name):
+        self.captures.append(piece_name)
+
+    def get_escape_moves(self):
+        return self.escape_moves
