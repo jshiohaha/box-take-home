@@ -1,0 +1,12 @@
+UPPER player action: move d2 d1 promote
+5 |__|__|__|__| K|
+4 |__|__|__|__|__|
+3 |__|__|__|__|__|
+2 | g|__|__| G|__|
+1 | k|__|__|__|__|
+    a  b  c  d  e
+
+Captures UPPER: S B R P
+Captures lower: p r b s
+
+lower player wins.  Illegal move.

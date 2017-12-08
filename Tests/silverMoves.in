@@ -1,0 +1,18 @@
+k a1
+K e5
+s c1
+S c5
+
+[G B R P]
+[p r b g]
+
+move c1 b2
+move c5 d4
+move b2 c1
+move d4 c5
+move c1 d2
+move c5 b4
+move d2 c1
+move b4 c5
+move c1 c2
+move c5 c4

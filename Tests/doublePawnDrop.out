@@ -1,0 +1,12 @@
+lower player action: drop p a3
+5 |__|__|__| G| K|
+4 |__|__|__|__|__|
+3 |__|__|__|__|__|
+2 | p|__|__|__|__|
+1 | k|__|__|__|__|
+    a  b  c  d  e
+
+Captures UPPER: G S B R
+Captures lower: p r b s
+
+UPPER player wins.  Illegal move.

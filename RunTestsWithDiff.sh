@@ -1,7 +1,7 @@
 #!/bin/bash
 count=0
 increment=1
-for fullfile in "./Test/*.in"; do
+for fullfile in "./Tests/*.in"; do
     for file in $fullfile; do
     	filename=$(basename "$file")
 		extension="${filename##*.}"
@@ -12,6 +12,6 @@ for fullfile in "./Test/*.in"; do
 		count=$(($count+$increment))
 
 		echo -e 'Running test '$count'... \t' $input
-		python './src/myShogi.py' -f './Test/'$input | diff -u './Test/'$output -
+		python './src/myShogi.py' -f './Tests/'$input | diff -u './Tests/'$output -
     done
 done

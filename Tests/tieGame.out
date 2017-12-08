@@ -1,0 +1,12 @@
+UPPER player action: move e4 e5
+5 |__|__|__|__| K|
+4 |__|__|__|__|__|
+3 |__|__|__|__|__|
+2 |__|__|__|__|__|
+1 | k|__|__|__|__|
+    a  b  c  d  e
+
+Captures UPPER: G S B R P
+Captures lower: p r b s g
+
+Tie game.  Too many moves.

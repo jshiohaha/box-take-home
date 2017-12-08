@@ -1,0 +1,12 @@
+UPPER player action: drop g a2
+5 |__|__|__| K|__|
+4 |__|__|__|__|__|
+3 | S|__|__|__|__|
+2 | G|__|__|__|__|
+1 | k|__| r|__|__|
+    a  b  c  d  e
+
+Captures UPPER: S B P
+Captures lower: g b r p
+
+UPPER player wins.  Checkmate.

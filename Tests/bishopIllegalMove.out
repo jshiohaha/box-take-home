@@ -1,0 +1,12 @@
+lower player action: move d1 d2
+5 |__| B|__|__| K|
+4 |__|__|__|__|__|
+3 |__|__|__|__|__|
+2 |__|__|__|__|__|
+1 | k|__|__| b|__|
+    a  b  c  d  e
+
+Captures UPPER: G S R P
+Captures lower: p r s g
+
+UPPER player wins.  Illegal move.

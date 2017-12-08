@@ -1,0 +1,12 @@
+UPPER player action: move a5 e5
+5 |__|__|__|__| R|
+4 |__|__|__| K|__|
+3 |__|__|__|__|__|
+2 |__| k|__|__|__|
+1 | r|__|__|__|__|
+    a  b  c  d  e
+
+Captures UPPER: G S B P
+Captures lower: p b s g
+
+lower> 

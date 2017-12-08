@@ -1,0 +1,12 @@
+UPPER player action: drop p b5
+5 |__| P|__|__| K|
+4 |__|__|__|__|__|
+3 |__|__|__|__|__|
+2 |__|__|__|__|__|
+1 | k| p|__|__|__|
+    a  b  c  d  e
+
+Captures UPPER: G S B R
+Captures lower: r b s g
+
+lower> 
