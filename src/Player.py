@@ -3,6 +3,7 @@ PLAYER = [LOWER, UPPER] = [0, 1]
 map_player_enum_to_name = { LOWER: "lower", UPPER: "UPPER" }
 map_player_name_to_enum = { "lower": LOWER, "UPPER": UPPER}
 
+
 class Player():
 
     def __init__(self, name, initial_captures=None):
@@ -16,6 +17,10 @@ class Player():
         self.in_checkmate = False
         self.escape_moves = None
         self.moves_to_go_in_check = None
+        self.drop_locations = None
+
+    def get_name(self):
+        return self.name
 
     def is_in_check(self):
         return self.in_check
@@ -29,8 +34,12 @@ class Player():
     def get_pieces(self):
         return self.pieces
 
-    def update_piece_locations(self, key, val):
-        self.pieces[key] = val
+    def update_pieces(self, piece_name, location):
+        self.pieces[piece_name] = location
 
     def get_escape_moves(self):
         return self.escape_moves
+
+    def remove_from_pieces(self, piece_name):
+        self.pieces.pop(piece_name, None)
+
