@@ -1,24 +1,33 @@
 import sys
-import logging as logger
-# from pathlib import Path
+import Game as game
 
-import MyShogiGame as my_shogi_game
 
 def main():
-    logger.basicConfig(filename='../MyShogiGame.log', level=logger.DEBUG)
-    mode = sys.argv[1][1]
-
     filename = None
-    if len(sys.argv) > 2:
-        filename = sys.argv[2]
+    debug_mode = False
 
-    # my_file = Path(filename)
-    # if my_file.is_file():
-    game = my_shogi_game.MyShogiGame(mode, filename)
-    game.run(logger)
-    # else:
-    #     print("Filename given (" + filename + ") could not be found. Exiting...")
-    #     sys.exit()
+    arg_length = len(sys.argv)
+
+    if arg_length > 5:
+        print("Too many parameters. Exiting...")
+        sys.exit()
+    else:
+        if sys.argv[1][1] == 'd':
+            debug_mode = True
+            del sys.argv[1]
+            arg_length -= 1
+
+        mode = sys.argv[1][1]
+        if arg_length > 2:
+            filename = sys.argv[2]
+        elif arg_length > 1:
+            mode = sys.argv[1][1]
+        else:
+            print("Too few parameters. Exiting...")
+            sys.exit()
+
+    game_instance = game.Game(mode, filename, debug_mode)
+    game_instance.run()
 
 if __name__ == "__main__":
     main()
