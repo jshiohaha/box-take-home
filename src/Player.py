@@ -37,6 +37,9 @@ class Player():
     def update_pieces(self, piece_name, location):
         self.pieces[piece_name] = location
 
+    def get_piece_location(self, piece_name):
+        return self.pieces[piece_name]
+
     def get_escape_moves(self):
         return self.escape_moves
 
