@@ -21,6 +21,7 @@ map_num_to_char = {
    5: "e",
 }
 
+
 class GameBoard(object):
     def __init__(self, defaultConfiguation=True, listOfPiecesAndLocations=None):
         ''' Initializes the game board based on the initial configuration
