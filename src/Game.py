@@ -96,7 +96,7 @@ class Game(object):
             if not move_was_made:
                 self.set_game_over_status(ILLEGAL_MOVE)
 
-            self.is_opponent_in_check_and_checkmate(self.game_board, self.current_player)
+            self.is_opponent_in_check(self.game_board, self.current_player)
             self.switch_current_player()
             self.increment_num_moves()
 
@@ -160,7 +160,7 @@ class Game(object):
                 if not move_was_made:
                     self.set_game_over_status(ILLEGAL_MOVE)
 
-                self.is_opponent_in_check_and_checkmate(self.game_board, self.current_player)
+                self.is_opponent_in_check(self.game_board, self.current_player)
                 self.switch_current_player()
                 self.increment_num_moves()
                 self.print_last_action(self.game_board, self.lower_player.captures, self.upper_player.captures, move)
@@ -334,13 +334,13 @@ class Game(object):
         return board, True
 
 
-    def is_opponent_in_check_and_checkmate(self, board, current_player):
+    def is_opponent_in_check(self, board, current_player):
         ''' Return type void
 
-        This function checks whether or not the opposing player is in check and/or
-        checkmate based on the current state of the board and the current player. 
-        If the player is in check, then moves are generated to escape check. These
-        moves are then explicitly set as an attriubte on the opposing player
+        This function checks whether or not the opposing player is in check.
+        If the player is in check, then moves are generated to escape check. 
+        If there exist moves to escape check, then is_opponent_in_checkmate
+        to validate that the moves will actually result in avoiding checkmate.
         '''
         opposing_player, king = (self.upper_player, 'K') if current_player is self.lower_player else (self.lower_player, 'k')
         current_player_moves = self.get_possible_piece_moves(self.current_player, board)
@@ -348,52 +348,68 @@ class Game(object):
         king_loc = opposing_player.get_piece_location(king)
 
         if king_loc in current_player_moves:
-            escape_moves, drop_moves = self.find_moves_to_escape_checkmate(king, king_loc, opposing_player, current_player, board)
+            escape_moves, drop_moves = self.find_moves_to_escape_check(king, king_loc, opposing_player, current_player, board)
             opposing_player.in_check = True
 
             if not escape_moves:
                 opposing_player.in_checkmate = True
             else:
-                num_pieces_in_checkmate = 0
-                for move_from, end_locs in escape_moves.items():
-                    for move_to in end_locs:
-                        temp_board = deepcopy(board)
-                        temp_pieces = copy(current_player.get_pieces())
-                        temp_moves = current_player_moves
-                        col, row = piece_util.convert_board_pos_to_index(move_to[1]), piece_util.convert_board_pos_to_index(game_board.map_char_to_num[move_to[0]])
+                self.is_opponent_in_checkmate(board, king, current_player, current_player_moves, escape_moves, drop_moves)
 
-                        if temp_board[row][col] != '':
-                            piece_to_remove = temp_board[row][col]
-                            temp_pieces.pop(piece_to_remove, None)
-                            piece_name =  piece_util.get_piece_at_location(temp_board, move_from)
-                            temp_board = piece_util.make_move(temp_board, piece_name, move_from, move_to)
 
-                            for temp_piece_name, temp_loc in temp_pieces.items():
-                                temp_moves += piece_util.generate_moves_by_piece(temp_piece_name, temp_loc, current_player, temp_board, False)
-                            if move_to in temp_moves:
-                                num_pieces_in_checkmate += 1
-                # void any drop locations that the current player already has pieces at
-                drop_moves = [x for x in drop_moves if x not in current_player.get_pieces().values()]
-                for piece in opposing_player.captures:
-                    for drop in drop_moves:
-                        temp_board = deepcopy(board)
-                        temp_captures = copy(opposing_player.captures)
-                        temp_moves = list()
-                        temp_board = piece_util.drop_piece(temp_board, current_player, piece, drop)
-                        
-                        for temp_piece_name, temp_loc in current_player.get_pieces().items():
-                            temp = piece_util.generate_moves_by_piece(temp_piece_name, temp_loc, current_player, temp_board, False)
-                            temp_moves += temp
-                        temp_moves = [x for x in list(set(temp_moves)) if x not in current_player.get_pieces().values()]
+    def is_opponent_in_checkmate(self, board, king, current_player, current_player_moves, escape_moves, drop_moves):
+        ''' Return type void
 
-                        if king_loc in temp_moves:
-                            drop_moves.remove(drop)
+        This function only gets called when the opposing player is in check.
+        Thus, this function checks whether or not the opposing player is in
+        checkmate based on the moves to escape check generated in the
+        is_opponent_in_check function. If the opposing player is in checkmate,
+        then the in_checkmate attribute of the opposing player is set to True,
+        If the opposing player is not in checkmate, the escape_moves attribute
+        is set to the escape moves generated.
+        '''
+        num_pieces_in_checkmate = 0
+        for move_from, end_locs in escape_moves.items():
+            for move_to in end_locs:
+                temp_board = deepcopy(board)
+                temp_pieces = copy(current_player.get_pieces())
+                temp_moves = current_player_moves
+                col, row = piece_util.convert_board_pos_to_index(move_to[1]), piece_util.convert_board_pos_to_index(game_board.map_char_to_num[move_to[0]])
 
-                # if number of pieces in checkmates are equal to the number of moves to escape, 
-                # then there is no place to go and game is over
-                if num_pieces_in_checkmate == (len(escape_moves.values()) + len(drop_moves)):
-                    opposing_player.in_checkmate = True
-                opposing_player.escape_moves = { 'drop_moves': drop_moves, 'escape_moves': escape_moves }
+                if temp_board[row][col] != '':
+                    piece_to_remove = temp_board[row][col]
+                    temp_pieces.pop(piece_to_remove, None)
+                    piece_name =  piece_util.get_piece_at_location(temp_board, move_from)
+                    temp_board = piece_util.make_move(temp_board, piece_name, move_from, move_to)
+
+                    for temp_piece_name, temp_loc in temp_pieces.items():
+                        temp_moves += piece_util.generate_moves_by_piece(temp_piece_name, temp_loc, current_player, temp_board, False)
+                    if move_to in temp_moves:
+                        num_pieces_in_checkmate += 1
+        opposing_player = self.get_opposing_player()
+        king_loc = opposing_player.get_piece_location(king)
+        # void any drop locations that the current player already has pieces at
+        drop_moves = [x for x in drop_moves if x not in current_player.get_pieces().values()]
+        for piece in opposing_player.captures:
+            for drop in drop_moves:
+                temp_board = deepcopy(board)
+                temp_captures = copy(opposing_player.captures)
+                temp_moves = list()
+                temp_board = piece_util.drop_piece(temp_board, current_player, piece, drop)
+                
+                for temp_piece_name, temp_loc in current_player.get_pieces().items():
+                    temp = piece_util.generate_moves_by_piece(temp_piece_name, temp_loc, current_player, temp_board, False)
+                    temp_moves += temp
+                temp_moves = [x for x in list(set(temp_moves)) if x not in current_player.get_pieces().values()]
+
+                if king_loc in temp_moves:
+                    drop_moves.remove(drop)
+        # if number of pieces in checkmates are equal to the number of moves to escape, 
+        # then there is no place to go and game is over
+        if num_pieces_in_checkmate == (len(escape_moves.values()) + len(drop_moves)):
+            opposing_player.in_checkmate = True
+        else:
+            opposing_player.escape_moves = { 'drop_moves': drop_moves, 'escape_moves': escape_moves }
 
 
     def generate_possible_escape_move_strings(self, current_player, escape_moves):
@@ -412,7 +428,7 @@ class Game(object):
         return list_of_escape_moves
 
 
-    def find_moves_to_escape_checkmate(self, king, king_loc, current_player, opposing_player, board):
+    def find_moves_to_escape_check(self, king, king_loc, current_player, opposing_player, board):
         escape_moves = dict()
         dangerous_moves = list()
         list_of_escape_moves = list()
