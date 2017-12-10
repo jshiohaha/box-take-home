@@ -472,8 +472,51 @@ def generate_rook_attack(origin_col, origin_row, king_col, king_row, player, boa
 
 
 def generate_bishop_attack(origin_col, origin_row, king_col, king_row, player, board):
-    # TODO: implement immediate attack locations for bishop
     attack_moves = set()
+    col, row = origin_col+1, origin_row+1
+    king_col, king_row = king_col+1, king_row+1
+    offset = 1
+
+    # Checking the UPPER RIGHT direction
+    if king_col > col and king_row > row:
+        if king_col - col == king_row - row:
+            attack_moves.add((origin_col+1, origin_row+1))
+            while game_board.NUM_COLS >= col+offset  and game_board.NUM_ROWS >= row+offset: 
+                if board[row+offset-1][col+offset-1] == '':
+                    attack_moves.add((col+offset, row+offset))
+                else:
+                    break
+                offset += 1
+    # Checking the LOWER RIGHT direction
+    elif king_col < col and king_row > row:
+        difference = col - king_col
+        if row + difference == king_row:
+            attack_moves.add((origin_col+1, origin_row+1))
+            while 1 <= col-offset  and game_board.NUM_COLS >= row+offset:
+                if board[row+offset-1][col-offset-1] == '':
+                    attack_moves.add((col-offset, row+offset))
+                else:
+                    break
+                offset += 1
+    # Checking the UPPER LEFT direction
+    elif king_col > col and king_row < row:
+        difference = row - king_row
+        if king_col - difference == col:
+            attack_moves.add((col, row))
+            while game_board.NUM_COLS >= col+offset  and 1 <= row-offset: 
+                if board[row-offset-1][col+offset-1] == '':
+                    attack_moves.add((col+offset, row-offset))
+                offset += 1
+    # Checking the LOWER LEFT direction
+    elif king_col < col and king_row < row:
+        if col - king_col == row - king_col:
+            attack_moves.add((col, row))
+            while 1 <= col-offset  and 1 <= row-offset:
+                if board[row-offset-1][col-offset-1] == '':
+                    attack_moves.add((col+offset, row+offset))
+                else:
+                    break
+                offset += 1
     return attack_moves
 
 

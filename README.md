@@ -2,7 +2,7 @@
 
 This project allows two people to play mini shogi via a command line interface. For more details on how to interact with the game, see the section on **Getting Started > Game Modes**. 
 
-The project was written in `Python 3.5.3`.
+The project was written in `Python 3.5.3`. There are no `pip` packages used, so you should be able to just run the project aftering cloning the repository. However, if you are attempting to run the program via Windows, you will most likely have to modify your `PYTHONPATH` to contain the path of this project. Otherwise, Windows will not recognize any of the classes as modules when some files try to import them.
 
 ## Getting Started
 
