@@ -83,6 +83,8 @@ class Game(object):
         '''
 
         for move in self.moves:
+            if self.debug_mode:
+                print()
             if self.current_player.is_in_checkmate():
                 self.set_game_over_status(CHECKMATE)
                 break
@@ -147,7 +149,6 @@ class Game(object):
             else:
                 move = input(self.current_player.get_name() + "> ")
                 action, action_param_1, action_param_2, action_param_3 = self.parse_move_input(move)
-
                 # attempts to take an action that does not allow the current player to get out of check
                 if self.current_player.is_in_check() and action_param_2 not in self.current_player.get_escape_moves():
                     if self.debug_mode:
