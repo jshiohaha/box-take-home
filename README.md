@@ -23,7 +23,7 @@ If you wish to see more detailed output as to what is happening behind the scene
 
 ```python src/myShogi.py -d -i```
 
-Specifying debug mode in the file game mode would look like this:
+It should be noted that if you run debug mode with file game mode and try to diff the output, it will not match the expected output of the testcase you are running. Specifying debug mode in the file game mode would look like this:
 
 ```python src/myShogi.py -d -f Tests/<inputTestCaseName>```
 
